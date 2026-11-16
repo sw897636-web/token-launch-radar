@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Token Launch Radar — pre-token protocols ranked by implied value</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <p class="kicker">Token Launch Radar</p>
+    <h1>Protocols still waiting on a launch, ranked by what a token would be worth</h1>
+    <p class="lede">Every protocol below records no token. The board states an implied value for each one, from its own figures alone, and a farm plan with costs and times. Nothing here predicts whether or when a token is issued.</p>
+    <dl class="stats" id="stats"></dl>
+  </div>
+</header>
+<main class="wrap">
+  <nav class="tabs" id="tabs" aria-label="Views">
+    <button type="button" data-tab="board" class="on">Pre-token board</button>
+    <button type="button" data-tab="live">Already trading</button>
+  </nav>
+  <section class="filters" id="filters" aria-label="Filters">
+    <label>Search <input id="q" type="search" placeholder="Name or slug" autocomplete="off"></label>
+    <label>Category <select id="cat"><option value="all">All categories</option></select></label>
+    <label>Chain <select id="chain"><option value="all">All chains</option></select></label>
+    <label>TVL <select id="tvl">
+      <option value="all">Any TVL</option>
+      <option value="b1">$1B and up</option>
+      <option value="m100">$100M – $1B</option>
+      <option value="m10">$10M – $100M</option>
+      <option value="u10">Under $10M</option>
+    </select></label>
+    <label>Sort <select id="sort">
+      <option value="implied">Implied value</option>
+      <option value="tvl">TVL</option>
+      <option value="chg">7-day change</option>
+      <option value="age">Age</option>
+    </select></label>
+    <label class="check"><input id="wl" type="checkbox"> Watchlist only</label>
+    <p class="count" id="count" aria-live="polite"></p>
+  </section>
+  <section id="board" aria-label="Ranked board"></section>
+  <section id="detail" aria-label="Protocol detail" hidden></section>
+  <section id="live" aria-label="Already trading" hidden></section>
+  <section class="method" aria-label="How the radar works">
+    <h2>How the radar works</h2>
+    <p><strong>Implied value.</strong> A protocol's implied value is its TVL times 0.30, times a growth factor from its seven-day TVL change (clamped to −50%…+150%, weight 0.6), times a maturity factor from how long it has run with no token (0.65 at listing, rising to 1.00 after three years; unknown age counts as one year), times a chain factor (1.00 on one chain, +0.05 per extra chain, up to 1.20). The constants are fixed for the whole board and the detail view shows each factor, so any row can be checked by hand.</p>
+    <p><strong>What is ranked.</strong> A protocol is ranked when its record carries no market cap, no CoinGecko id and no symbol. The board covers all 40 protocols on the snapshot's watchlist, then the 160 strongest pre-token protocols below the watchlist's $50M floor, picked by implied value. Exchanges, versioned pools and names carrying wrapped, staked or staking are left out. The wrapped and bridged products of tokens that already trade sit above the floor and are left out with it.</p>
+    <p><strong>What it is not.</strong> “Records no token” is what the snapshot says; it is not proof a protocol has none. The implied value is this entry's own claim about what a token would be worth if the protocol's record stayed as it is. It is not a prediction that a token will be issued, or when.</p>
+    <p class="src" id="src"></p>
+  </section>
+</main>
+<script src="../data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
