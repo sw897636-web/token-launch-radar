@@ -116,8 +116,8 @@ export interface BoardRow {
   farm_steps: string[];
 }
 
-/** One compact dashboard row: [rank, slug, name, category, chains, tvl, chg7d, age, implied, growthMul, maturityMul, chainMul]. */
-export type RadarRow = [number, string, string, string | null, string[], number, number | null, number | null, number, number, number, number];
+/** One compact dashboard row: [rank, slug, name, category, chains, tvl, chg7d, age, implied, growthMul, maturityMul, chainMul, watchlist]. */
+export type RadarRow = [number, string, string, string | null, string[], number, number | null, number | null, number, number, number, number, number];
 
 /** One live-token protocol for the Already trading view: [slug, name, category, chains, tvl, mcap, chg7d]. */
 export type LiveRow = [string, string, string | null, string[], number, number | null, number | null];
@@ -376,8 +376,8 @@ export function liveRows(snapshot: Snapshot): LiveRow[] {
     .map((p) => [p.slug, p.name, p.category, p.chains, p.tvl_usd, p.mcap_usd, p.change_7d]);
 }
 
-/** A board row's compact form for data.js. */
-export function radarRow(row: BoardRow): RadarRow {
+/** A board row's compact form for data.js. The last element marks the watchlist, so the page can filter to it. */
+export function radarRow(row: BoardRow, watchlist: Set<string>): RadarRow {
   return [
     row.rank,
     row.slug,
@@ -391,6 +391,7 @@ export function radarRow(row: BoardRow): RadarRow {
     row.model.growth_multiplier,
     row.model.maturity_multiplier,
     row.model.chain_multiplier,
+    watchlist.has(row.slug) ? 1 : 0,
   ];
 }
 
@@ -409,7 +410,7 @@ export function buildRadar(snapshot: Snapshot, model: ModelConstants = MODEL): {
     board_size: board.length,
     early_size: early,
     live_size: live.length,
-    rows: board.map(radarRow),
+    rows: board.map((r) => radarRow(r, new Set(snapshot.watchlist))),
     live,
   };
   return { board, radar };
